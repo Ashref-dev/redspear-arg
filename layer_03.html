@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAYER 03: EYE</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+
+    <canvas
+      id="eye-canvas"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%"
+    ></canvas>
+
+    <div
+      style="
+        position: absolute;
+        bottom: 50px;
+        width: 100%;
+        text-align: center;
+        pointer-events: none;
+      "
+    >
+      <p
+        class="sub font-ui"
+        style="margin: 0 auto; background: black; padding: 5px"
+      >
+        DON'T BLINK.
+      </p>
+    </div>
+
+    <!-- Hidden trigger to next level: click the pupil -->
+    <div
+      id="pupil-trigger"
+      style="
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 2000;
+      "
+    ></div>
+
+    <script src="dither.js"></script>
+    <script>
+      startLivingWired();
+
+      const trigger = document.getElementById('pupil-trigger');
+      trigger.addEventListener('click', () => {
+        window.location.href = 'layer_04.html';
+      });
+
+      // Track pupil pos for trigger
+      let pupilX = window.innerWidth / 2;
+      let pupilY = window.innerHeight / 2;
+
+      renderCanvasLoop('eye-canvas', (ctx, w, h) => {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, w, h);
+
+        // Eye tracking math
+        const maxOffset = 50;
+        const dx = ((mouseX - w / 2) / (w / 2)) * maxOffset;
+        const dy = ((mouseY - h / 2) / (h / 2)) * maxOffset;
+
+        // Sclera
+        ctx.beginPath();
+        ctx.ellipse(w / 2, h / 2, 200, 120, 0, 0, Math.PI * 2);
+        ctx.fillStyle = '#cccccc';
+        ctx.fill();
+
+        // Iris
+        const ix = w / 2 + dx;
+        const iy = h / 2 + dy;
+        ctx.beginPath();
+        ctx.arc(ix, iy, 80, 0, Math.PI * 2);
+        ctx.fillStyle = '#ff0000';
+        ctx.fill();
+
+        // Pupil (Slit)
+        // Jitter pupil size
+        const dilation = 10 + Math.sin(Date.now() / 200) * 5;
+        ctx.beginPath();
+        ctx.ellipse(ix, iy, dilation, 70, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+
+        // Update trigger pos
+        // We need to map canvas coords to screen coords roughly
+        // Canvas is 100% width/height so it matches checks
+        pupilX = ix;
+        pupilY = iy;
+
+        // Sync trigger div
+        trigger.style.left = ix - 25 + 'px';
+        trigger.style.top = iy - 25 + 'px';
+      });
+    </script>
+  </body>
+</html>

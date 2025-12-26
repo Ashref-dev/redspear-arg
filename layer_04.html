@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAYER 04: SCROLL</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      body {
+        overflow-y: scroll;
+        padding: 50px;
+      }
+      p {
+        margin-bottom: 50px;
+        color: var(--text-white);
+        font-size: 1.2rem;
+        opacity: 0.7;
+      }
+      .highlight {
+        color: red;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="crt-overlay"></div>
+
+    <div
+      id="content"
+      class="font-typewriter"
+      style="max-width: 800px; margin: 0 auto"
+    >
+      <h1>THE MANIFESTO OF NO ONE</h1>
+      <p>
+        We built this place to hide from the sun. The
+        <span class="highlight">Wired</span> is not a place for the living.
+      </p>
+      <p>Why do you keep scrolling?</p>
+      <p>There is nothing at the bottom.</p>
+    </div>
+
+    <div style="position: fixed; bottom: 20px; right: 20px">
+      <a
+        href="layer_05.html"
+        style="color: red; background: black; padding: 10px"
+        >[ DEEPER ]</a
+      >
+    </div>
+
+    <!-- Hidden Nav -->
+    <div class="hidden-nav">
+      <a href="index.html">01</a>
+      <a href="layer_02.html">02</a>
+      <a href="layer_03.html">03</a>
+      <a href="layer_04.html">04</a>
+      <a href="layer_05.html">05</a>
+      <a href="layer_06.html">06</a>
+      <a href="layer_07.html">07</a>
+    </div>
+
+    <script>
+      // Infinite scroll effect
+      window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+          // Add more paragraphs
+          const content = document.getElementById('content');
+          for (let i = 0; i < 3; i++) {
+            const p = document.createElement('p');
+            p.innerHTML = generateGibberish();
+            content.appendChild(p);
+          }
+        }
+      });
+
+      function generateGibberish() {
+        const phrases = [
+          'The data is corrupt.',
+          'Can you feel them watching?',
+          'SYSTEM FAILURE',
+          'The protocol is broken.',
+          'God is in the wired.',
+          '0x44 Dead Beef',
+          "Don't look behind you.",
+          "It's all noise.",
+          'Static. White noise.',
+        ];
+        let text = '';
+        for (let i = 0; i < 10; i++) {
+          text += phrases[Math.floor(Math.random() * phrases.length)] + ' ';
+        }
+        return text;
+      }
+    </script>
+  </body>
+</html>

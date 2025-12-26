@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAYER 05: MEMORY</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      .memory-img {
+        max-width: 80%;
+        display: none;
+        filter: grayscale(100%) contrast(150%) brightness(50%);
+        border: 1px solid red;
+      }
+      .active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    "
+  >
+    <div class="crt-overlay"></div>
+    <div class="noise-overlay"></div>
+
+    <h2 class="font-pixel glitch-text" data-text="DO YOU REMEMBER?">
+      DO YOU REMEMBER?
+    </h2>
+
+    <!-- Normally these would be real glitched images, we will use placeholders -->
+    <div id="slideshow" style="margin-top: 50px">
+      <canvas
+        id="mem1"
+        class="dither-canvas active"
+        width="400"
+        height="300"
+      ></canvas>
+    </div>
+
+    <div style="margin-top: 50px">
+      <a href="layer_06.html">[ NO ]</a>
+    </div>
+
+    <!-- Hidden Nav -->
+    <div class="hidden-nav">
+      <a href="index.html">01</a>
+      <a href="layer_02.html">02</a>
+      <a href="layer_03.html">03</a>
+      <a href="layer_04.html">04</a>
+      <a href="layer_05.html">05</a>
+      <a href="layer_06.html">06</a>
+      <a href="layer_07.html">07</a>
+    </div>
+
+    <script src="dither.js"></script>
+    <script>
+      const ctx = document.getElementById('mem1').getContext('2d');
+
+      // Draw random noise shapes
+      function drawNoiseArt() {
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, 400, 300);
+
+        for (let i = 0; i < 50; i++) {
+          ctx.fillStyle = `rgba(${
+            Math.random() * 255
+          }, 0, 0, ${Math.random()})`;
+          ctx.fillRect(
+            Math.random() * 400,
+            Math.random() * 300,
+            Math.random() * 50,
+            Math.random() * 50
+          );
+        }
+
+        const imgData = ctx.getImageData(0, 0, 400, 300);
+        applyBayerDither(imgData, bayerMap);
+        ctx.putImageData(imgData, 0, 0);
+      }
+
+      setInterval(drawNoiseArt, 1000); // 1fps slideshow of noise
+    </script>
+  </body>
+</html>

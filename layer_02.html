@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAYER 02: NOISE</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      body {
+        overflow: hidden;
+      }
+      .scream-text {
+        position: absolute;
+        font-size: 5rem;
+        color: var(--main-red);
+        font-family: var(--font-ui);
+        mix-blend-mode: exclusion;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.1s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div
+      class="vignette"
+      style="background: radial-gradient(circle, transparent 10%, black 90%)"
+    ></div>
+    <div class="scanlines"></div>
+    <div class="noise" style="opacity: 0.3"></div>
+
+    <div class="center-stage">
+      <h2 class="sub" style="font-size: 2rem">IT'S TOO LOUD</h2>
+    </div>
+
+    <!-- Scream text elements -->
+    <div id="screams"></div>
+
+    <script src="dither.js"></script>
+    <script>
+      startLivingWired();
+
+      // Adventure: Moving mouse makes it louder (more text)
+      // Clicking center quiets it briefly then moves to next layer
+
+      document.addEventListener('mousemove', (e) => {
+        const intensity = Math.abs(e.movementX) + Math.abs(e.movementY);
+        if (intensity > 5 && Math.random() > 0.5) {
+          spawnScream(e.clientX, e.clientY);
+        }
+      });
+
+      document.querySelector('.center-stage').addEventListener('click', () => {
+        // proceed
+        window.location.href = 'layer_03.html';
+      });
+
+      function spawnScream(x, y) {
+        const el = document.createElement('div');
+        el.className = 'scream-text glitch-hover';
+        el.innerText = Math.random() > 0.5 ? 'NOISE' : 'SILENCE';
+        el.style.left = x + (Math.random() - 0.5) * 100 + 'px';
+        el.style.top = y + (Math.random() - 0.5) * 100 + 'px';
+        el.style.opacity = 1;
+        document.getElementById('screams').appendChild(el);
+
+        setTimeout(() => {
+          el.style.opacity = 0;
+          setTimeout(() => el.remove(), 500);
+        }, 500);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAYER 06: CONNECTION</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      #chat-box {
+        width: 80%;
+        height: 60vh;
+        border: 1px solid var(--lain-blue);
+        padding: 20px;
+        overflow-y: auto;
+        color: var(--lain-blue);
+      }
+      .msg {
+        margin-bottom: 10px;
+      }
+      .user {
+        color: var(--main-red);
+      }
+      .sys {
+        color: #fff;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    "
+  >
+    <div class="crt-overlay"></div>
+
+    <div id="chat-box" class="font-pixel">
+      <div class="msg sys">System: Connected to WIRED_NET_77</div>
+      <div class="msg sys">System: User ALICE joined.</div>
+    </div>
+
+    <input
+      type="text"
+      id="chat-input"
+      class="font-pixel"
+      style="
+        width: 80%;
+        background: black;
+        border: 1px solid var(--lain-blue);
+        color: white;
+        padding: 10px;
+        margin-top: 20px;
+      "
+      placeholder="Type to scream..."
+    />
+
+    <div style="margin-top: 20px">
+      <a
+        href="layer_07.html"
+        style="color: var(--lain-blue); text-decoration: none"
+        >[ DISCONNECT ]</a
+      >
+    </div>
+
+    <!-- Hidden Nav -->
+    <div class="hidden-nav">
+      <a href="index.html">01</a>
+      <a href="layer_02.html">02</a>
+      <a href="layer_03.html">03</a>
+      <a href="layer_04.html">04</a>
+      <a href="layer_05.html">05</a>
+      <a href="layer_06.html">06</a>
+      <a href="layer_07.html">07</a>
+    </div>
+
+    <script>
+      const chatBox = document.getElementById('chat-box');
+      const input = document.getElementById('chat-input');
+
+      const responses = [
+        'Are you real?',
+        'I can see your IP.',
+        'Why are you pretending?',
+        'The Wired is leaking.',
+        "Don't lie to me.",
+        '...',
+      ];
+
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const txt = input.value;
+          addMsg('YOU', txt, 'user');
+          input.value = '';
+
+          setTimeout(() => {
+            const resp =
+              responses[Math.floor(Math.random() * responses.length)];
+            addMsg('ALICE', resp, 'other');
+          }, 1000 + Math.random() * 2000);
+        }
+      });
+
+      function addMsg(user, txt, cls) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + cls;
+        div.innerText = `[${user}]: ${txt}`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    </script>
+  </body>
+</html>

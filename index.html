@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAYER 01: GATEWAY</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+
+    <div class="center-stage">
+      <!-- Interactive Canvas Eye -->
+      <canvas
+        id="gateway-canvas"
+        width="400"
+        height="300"
+        style="width: 400px; height: 300px; margin: 0 auto; display: block"
+      ></canvas>
+
+      <h1
+        class="title glitch-hover"
+        style="cursor: pointer"
+        onclick="enterWired()"
+      >
+        THE WIRED
+      </h1>
+      <p class="sub font-body" style="margin: 0 auto">
+        It breathes. Can you feel it?
+      </p>
+    </div>
+
+    <script src="dither.js"></script>
+    <script>
+      startLivingWired();
+
+      function enterWired() {
+        // Screen flash effect then redirect
+        document.body.style.background = 'white';
+        setTimeout(() => {
+          window.location.href = 'layer_02.html';
+        }, 100);
+      }
+
+      renderCanvasLoop('gateway-canvas', (ctx, w, h) => {
+        // Clear
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, w, h);
+
+        // Draw fluctuating circle
+        const radius = 50 + Math.sin(Date.now() / 500) * 10;
+        ctx.beginPath();
+        ctx.arc(w / 2, h / 2, radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'white'; // Becomes red in dither
+        ctx.fill();
+
+        // Draw chaotic lines
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+          ctx.moveTo(w / 2, h / 2);
+          ctx.lineTo(
+            w / 2 + (Math.random() - 0.5) * 200,
+            h / 2 + (Math.random() - 0.5) * 200
+          );
+        }
+        ctx.stroke();
+      });
+    </script>
+  </body>
+</html>

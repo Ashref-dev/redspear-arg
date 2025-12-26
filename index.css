@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=VT323&display=swap');
+
+:root {
+  --bg-color: #050000;
+  --main-red: #ff0000;
+  --blood-red: #8a0303;
+  --faded-gray: #4a4a4a;
+  --lain-cyan: #00ffff;
+  --font-body: 'Special Elite', monospace;
+  --font-ui: 'VT323', monospace;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--main-red);
+  font-family: var(--font-body);
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Adventure mode: No scrolling unless specified */
+  cursor: none; /* Custom cursor or none */
+}
+
+/* Custom Cursor */
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: red;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  box-shadow: 0 0 10px red;
+}
+
+/* Vignette - heavily dark corners */
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, transparent 40%, #000 120%);
+  pointer-events: none;
+  z-index: 900;
+}
+
+/* Scanlines */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.5) 3px,
+    rgba(0, 0, 0, 0.5) 4px
+  );
+  pointer-events: none;
+  z-index: 910;
+  animation: scrollScan 5s linear infinite;
+}
+@keyframes scrollScan {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
+  }
+}
+
+/* Noise */
+.noise {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 920;
+  animation: noiseMove 0.2s infinite steps(2);
+}
+@keyframes noiseMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -5%);
+  }
+  50% {
+    transform: translate(5%, 5%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Text styles */
+.title {
+  font-family: var(--font-ui);
+  font-size: 6rem;
+  line-height: 0.8;
+  color: var(--main-red);
+  text-shadow: 2px 2px 0px #000;
+  position: relative;
+  z-index: 10;
+  mix-blend-mode: hard-light;
+}
+
+.sub {
+  font-size: 1.2rem;
+  color: var(--faded-gray);
+  max-width: 400px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Glitch Animations */
+.glitch-hover:hover {
+  animation: shake 0.5s infinite;
+  color: white;
+  text-shadow: -2px 0 0 red, 2px 0 0 cyan;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+.hidden-link {
+  color: var(--main-red);
+  text-decoration: none;
+  cursor: none; /* Keep custom cursor */
+}
+
+/* Utility to center content absolutely but allow chaos */
+.center-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+}
+
+/* Random position classes (to be applied by JS or predefined) */
+.chaos-text {
+  position: absolute;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: rgba(255, 0, 0, 0.4);
+  pointer-events: none;
+  user-select: none;
+}
