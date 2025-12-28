@@ -29,16 +29,51 @@
     <div class="scanlines"></div>
     <div class="noise" style="opacity: 0.3"></div>
 
+    <!-- Hidden Key Flash -->
+    <div
+      id="glitch-flash"
+      style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10rem;
+        color: white;
+        display: none;
+        font-family: var(--font-pixel);
+        z-index: 9999;
+      "
+    >
+      x
+    </div>
+
     <div class="center-stage">
-      <h2 class="sub" style="font-size: 2rem">IT'S TOO LOUD</h2>
+      <h2 id="noise-title" class="sub" style="font-size: 2rem">
+        DATA_CORRUPTION_DETECTED
+      </h2>
+      <p style="text-align: center; color: var(--main-red); opacity: 0.5">
+        The signal is too loud... I can't hear my own thoughts.
+      </p>
     </div>
 
     <!-- Scream text elements -->
     <div id="screams"></div>
 
     <script src="dither.js"></script>
+    <script src="hints.js"></script>
+    <script src="audio.js"></script>
     <script>
       startLivingWired();
+      document.addEventListener(
+        'click',
+        () => {
+          if (window.audioCtx && audioCtx.state === 'suspended')
+            audioCtx.resume();
+          initAudio();
+        },
+        { once: true }
+      );
+      registerHint('noise-title', 'glitch-hint');
 
       // Adventure: Moving mouse makes it louder (more text)
       // Clicking center quiets it briefly then moves to next layer
@@ -54,6 +89,23 @@
         // proceed
         window.location.href = 'layer_03.html';
       });
+
+      // Random FLASH
+      setInterval(() => {
+        if (Math.random() > 0.90) {
+          flashKey();
+        }
+      }, 1000);
+
+      function flashKey() {
+        const el = document.getElementById('glitch-flash');
+        el.style.display = 'block';
+        document.body.classList.add('invert-flash');
+        setTimeout(() => {
+          el.style.display = 'none';
+          document.body.classList.remove('invert-flash');
+        }, 100);
+      }
 
       function spawnScream(x, y) {
         const el = document.createElement('div');

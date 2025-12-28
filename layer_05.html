@@ -16,22 +16,16 @@
       }
     </style>
   </head>
-  <body
-    style="
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    "
-  >
-    <div class="crt-overlay"></div>
-    <div class="noise-overlay"></div>
+  <body>
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="noise" style="opacity: 0.15"></div>
 
-    <h2 class="font-pixel glitch-text" data-text="DO YOU REMEMBER?">
-      DO YOU REMEMBER?
+    <h2 class="font-pixel glitch-text" data-text="MEMORY_FILE_CORRUPTED">
+      MEMORY_FILE_CORRUPTED
     </h2>
 
-    <!-- Normally these would be real glitched images, we will use placeholders -->
     <div id="slideshow" style="margin-top: 50px">
       <canvas
         id="mem1"
@@ -41,26 +35,53 @@
       ></canvas>
     </div>
 
-    <div style="margin-top: 50px">
-      <a href="layer_06.html">[ NO ]</a>
+    <!-- Hidden Key Flash -->
+    <div
+      id="glitch-flash"
+      style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10rem;
+        color: white;
+        display: none;
+        font-family: var(--font-pixel);
+        z-index: 9999;
+      "
+    >
+      E
     </div>
 
-    <!-- Hidden Nav -->
-    <div class="hidden-nav">
-      <a href="index.html">01</a>
-      <a href="layer_02.html">02</a>
-      <a href="layer_03.html">03</a>
-      <a href="layer_04.html">04</a>
-      <a href="layer_05.html">05</a>
-      <a href="layer_06.html">06</a>
-      <a href="layer_07.html">07</a>
+    <div style="margin-top: 50px">
+      <p style="color: red; opacity: 0.6">I can't see her face anymore.</p>
+      <a
+        href="layer_06.html"
+        class="hidden-link font-ui"
+        style="font-size: 1.5rem"
+        id="no-link"
+        >[ CONTINUE ]</a
+      >
     </div>
 
     <script src="dither.js"></script>
+    <script src="hints.js"></script>
+    <script src="audio.js"></script>
     <script>
+      startLivingWired();
+      document.addEventListener(
+        'click',
+        () => {
+          if (window.audioCtx && audioCtx.state === 'suspended')
+            audioCtx.resume();
+          initAudio();
+        },
+        { once: true }
+      );
+      registerHint('no-link', 'glitch-hint');
+
       const ctx = document.getElementById('mem1').getContext('2d');
 
-      // Draw random noise shapes
       function drawNoiseArt() {
         ctx.fillStyle = '#111';
         ctx.fillRect(0, 0, 400, 300);
@@ -80,9 +101,24 @@
         const imgData = ctx.getImageData(0, 0, 400, 300);
         applyBayerDither(imgData, bayerMap);
         ctx.putImageData(imgData, 0, 0);
+
+        // Random FLASH of "1998"
+        if (Math.random() > 0.90) {
+          flashKey();
+        }
       }
 
-      setInterval(drawNoiseArt, 1000); // 1fps slideshow of noise
+      function flashKey() {
+        const el = document.getElementById('glitch-flash');
+        el.style.display = 'block';
+        document.body.classList.add('invert-flash'); // Add heavy chaos
+        setTimeout(() => {
+          el.style.display = 'none';
+          document.body.classList.remove('invert-flash');
+        }, 100);
+      }
+
+      setInterval(drawNoiseArt, 1000);
     </script>
   </body>
 </html>

@@ -2,14 +2,73 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LAYER 01: GATEWAY</title>
     <link rel="stylesheet" href="index.css" />
+    <style>
+      .glitch {
+        animation: glitch 2s infinite linear;
+      }
+      @keyframes glitch {
+        0%, 100% { transform: translate(0); }
+        10% { transform: translate(-1px, 1px); }
+        20% { transform: translate(-1px, -1px); }
+        30% { transform: translate(1px, 1px); }
+        40% { transform: translate(1px, -1px); }
+        50% { transform: translate(-1px, 1px); }
+        60% { transform: translate(-1px, -1px); }
+        70% { transform: translate(1px, 1px); }
+        80% { transform: translate(1px, -1px); }
+        90% { transform: translate(-1px, 1px); }
+      }
+      .fade-sub {
+        animation: fade 4s infinite;
+      }
+      @keyframes fade {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.8; }
+      }
+      .floating-error {
+        position: absolute;
+        color: rgba(255, 0, 0, 0.4);
+        font-family: var(--font-ui);
+        font-size: 1rem;
+        animation: float 6s infinite ease-in-out;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); opacity: 0.4; }
+        50% { transform: translateY(-10px); opacity: 0.8; }
+      }
+    </style>
   </head>
   <body>
-    <div id="cursor-dot" class="cursor-dot"></div>
     <div class="vignette"></div>
     <div class="scanlines"></div>
     <div class="noise"></div>
+
+    <!-- Floating Error Messages -->
+    <div class="floating-error" style="top: 15%; left: 10%;">SYSTEM ERROR</div>
+    <div class="floating-error" style="top: 25%; right: 15%;">CONNECTION UNSTABLE</div>
+    <div class="floating-error" style="bottom: 30%; left: 20%;">DATA CORRUPTION</div>
+    <div class="floating-error" style="bottom: 20%; right: 10%;">ACCESS DENIED</div>
+
+    <!-- Hidden Key Flash -->
+    <div
+      id="glitch-flash"
+      style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10rem;
+        color: white;
+        display: none;
+        font-family: var(--font-pixel);
+        z-index: 9999;
+      "
+    >
+      0
+    </div>
 
     <div class="center-stage">
       <!-- Interactive Canvas Eye -->
@@ -21,20 +80,37 @@
       ></canvas>
 
       <h1
-        class="title glitch-hover"
-        style="cursor: pointer"
+        class="glitch"
         onclick="enterWired()"
+        id="title-text"
+        style="font-family: var(--font-ui); cursor: pointer;"
       >
-        THE WIRED
+        REDSPEAR
       </h1>
-      <p class="sub font-body" style="margin: 0 auto">
-        It breathes. Can you feel it?
+      <p class="sub fade-sub" style="color: var(--main-red); opacity: 0.5; text-align: center;">
+        Initiating connection to the wired...
       </p>
     </div>
 
     <script src="dither.js"></script>
+    <script src="hints.js"></script>
+    <script src="audio.js"></script>
     <script>
       startLivingWired();
+      document.addEventListener(
+        'click',
+        () => {
+          if (window.audioCtx && audioCtx.state === 'suspended')
+            audioCtx.resume();
+          initAudio();
+          // Start background music
+          const bgMusic = new Audio('Its Crashing.mp3');
+          bgMusic.loop = true;
+          bgMusic.volume = 1;
+          bgMusic.play().catch(e => console.log('Background music failed:', e));
+        },
+        { once: true }
+      );
 
       function enterWired() {
         // Screen flash effect then redirect
@@ -44,30 +120,65 @@
         }, 100);
       }
 
+      // Random FLASH
+      setInterval(() => {
+        if (Math.random() > 0.90) {
+          flashKey();
+        }
+      }, 1000);
+
+      function flashKey() {
+        const el = document.getElementById('glitch-flash');
+        el.style.display = 'block';
+        document.body.classList.add('invert-flash');
+        setTimeout(() => {
+          el.style.display = 'none';
+          document.body.classList.remove('invert-flash');
+        }, 100);
+      }
+
       renderCanvasLoop('gateway-canvas', (ctx, w, h) => {
-        // Clear
+        // Clear with slight noise
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, w, h);
 
-        // Draw fluctuating circle
-        const radius = 50 + Math.sin(Date.now() / 500) * 10;
+        // Add static noise
+        for (let i = 0; i < 500; i++) {
+          const x = Math.random() * w;
+          const y = Math.random() * h;
+          ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+          ctx.fillRect(x, y, 1, 1);
+        }
+
+        // Distorted fluctuating circle
+        const time = Date.now() / 1000;
+        const baseRadius = 40 + Math.sin(time * 2) * 20;
+        const distortion = Math.sin(time * 5) * 10;
+        const radius = baseRadius + distortion;
         ctx.beginPath();
         ctx.arc(w / 2, h / 2, radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'white'; // Becomes red in dither
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.8)'; // Red with transparency
         ctx.fill();
 
-        // Draw chaotic lines
-        ctx.strokeStyle = 'white';
+        // Chaotic lines with more variation
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
         ctx.lineWidth = 1;
-        ctx.beginPath();
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 8; i++) {
+          ctx.beginPath();
           ctx.moveTo(w / 2, h / 2);
-          ctx.lineTo(
-            w / 2 + (Math.random() - 0.5) * 200,
-            h / 2 + (Math.random() - 0.5) * 200
-          );
+          const angle = (i / 8) * Math.PI * 2 + Math.sin(time) * 0.5;
+          const length = 100 + Math.sin(time * 3 + i) * 50;
+          const endX = w / 2 + Math.cos(angle) * length;
+          const endY = h / 2 + Math.sin(angle) * length;
+          ctx.lineTo(endX, endY);
+          ctx.stroke();
         }
-        ctx.stroke();
+
+        // Overlay glitching text
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.font = '16px monospace';
+        ctx.fillText('ACCESSING...', 20, 30);
+        ctx.fillText('WIRED PROTOCOL', 20, h - 30);
       });
     </script>
   </body>

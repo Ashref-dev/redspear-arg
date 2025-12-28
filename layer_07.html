@@ -12,28 +12,49 @@
       }
     </style>
   </head>
-  <body
-    style="
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    "
-  >
-    <div class="crt-overlay"></div>
-    <div class="noise-overlay" style="opacity: 0.2"></div>
+  <body>
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="noise" style="opacity: 0.4"></div>
 
-    <div class="final-msg font-crazy">
-      <p>THERE IS NO EXIT</p>
-      <p style="font-size: 5rem; color: red">ONLY NOISE</p>
-      <br /><br />
-      <a
-        href="index.html"
-        style="font-size: 1rem; color: gray; text-decoration: none"
-        >[ REBOOT ]</a
-      >
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      "
+    >
+      <div class="final-msg font-crazy">
+        <p>CONSCIOUSNESS_FRIT</p>
+        <p style="font-size: 5rem; color: red">UPLOAD_FAILED</p>
+        <br /><br />
+        <a
+          href="index.html"
+          style="font-size: 1rem; color: gray; text-decoration: none"
+          class="font-ui"
+          id="reboot-link"
+          >[ RETRY UPLOAD ]</a
+        >
+      </div>
     </div>
 
     <script src="dither.js"></script>
+    <script src="hints.js"></script>
+    <script src="audio.js"></script>
+    <script>
+      startLivingWired();
+      document.addEventListener(
+        'click',
+        () => {
+          if (window.audioCtx && audioCtx.state === 'suspended')
+            audioCtx.resume();
+          initAudio();
+        },
+        { once: true }
+      );
+      registerHint('reboot-link', 'glitch-hint');
+    </script>
   </body>
 </html>

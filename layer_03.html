@@ -11,6 +11,24 @@
     <div class="scanlines"></div>
     <div class="noise"></div>
 
+    <!-- Hidden Key Flash -->
+    <div
+      id="glitch-flash"
+      style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10rem;
+        color: white;
+        display: none;
+        font-family: var(--font-pixel);
+        z-index: 9999;
+      "
+    >
+      7
+    </div>
+
     <canvas
       id="eye-canvas"
       style="position: absolute; top: 0; left: 0; width: 100%; height: 100%"
@@ -27,9 +45,10 @@
     >
       <p
         class="sub font-ui"
-        style="margin: 0 auto; background: black; padding: 5px"
+        id="eye-text"
+        style="margin: 0 auto; background: black; padding: 5px; opacity: 0.8"
       >
-        DON'T BLINK.
+        IT SEES EVERYTHING. FIND THE BLIND SPOT.
       </p>
     </div>
 
@@ -41,19 +60,48 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        cursor: pointer;
+        cursor: none;
         z-index: 2000;
       "
     ></div>
 
     <script src="dither.js"></script>
+    <script src="hints.js"></script>
+    <script src="audio.js"></script>
     <script>
       startLivingWired();
+      document.addEventListener(
+        'click',
+        () => {
+          if (window.audioCtx && audioCtx.state === 'suspended')
+            audioCtx.resume();
+          initAudio();
+        },
+        { once: true }
+      );
+      registerHint('pupil-trigger', 'cursor-hint');
 
       const trigger = document.getElementById('pupil-trigger');
       trigger.addEventListener('click', () => {
         window.location.href = 'layer_04.html';
       });
+
+      // Random FLASH
+      setInterval(() => {
+        if (Math.random() > 0.90) {
+          flashKey();
+        }
+      }, 1000);
+
+      function flashKey() {
+        const el = document.getElementById('glitch-flash');
+        el.style.display = 'block';
+        document.body.classList.add('invert-flash');
+        setTimeout(() => {
+          el.style.display = 'none';
+          document.body.classList.remove('invert-flash');
+        }, 100);
+      }
 
       // Track pupil pos for trigger
       let pupilX = window.innerWidth / 2;

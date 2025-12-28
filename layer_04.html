@@ -22,73 +22,175 @@
     </style>
   </head>
   <body>
-    <div class="crt-overlay"></div>
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="noise" style="opacity: 0.2"></div>
+
+    <!-- Faint Background Flash -->
+    <div
+      id="bg-flash"
+      style="
+        position: absolute;
+        font-size: 2rem;
+        color: rgba(255, 0, 0, 0.2);
+        display: none;
+        font-family: var(--font-ui);
+        z-index: 1;
+        pointer-events: none;
+        text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+      "
+    >
+      have we abandoned real life?
+    </div>
+
+    <!-- Hidden Key Flash -->
+    <div
+      id="glitch-flash"
+      style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10rem;
+        color: white;
+        display: none;
+        font-family: var(--font-pixel);
+        z-index: 9999;
+      "
+    >
+      C
+    </div>
 
     <div
       id="content"
       class="font-typewriter"
       style="max-width: 800px; margin: 0 auto"
     >
-      <h1>THE MANIFESTO OF NO ONE</h1>
+      <h1>ARCHIVE_FRAGMENT_004</h1>
       <p>
-        We built this place to hide from the sun. The
-        <span class="highlight">Wired</span> is not a place for the living.
+        <span class="highlight">G</span>uestalt protocol initiated. <span class="highlight">H</span>ack failed. <span class="highlight">O</span>verload imminent. <span class="highlight">S</span>ystem <span class="highlight">T</span>rapped in wired.
       </p>
-      <p>Why do you keep scrolling?</p>
-      <p>There is nothing at the bottom.</p>
+      <p>
+        Consciousness fragmented. Entity stuck in digital limbo.
+      </p>
+      <p>Continue descent. Seek the core anomaly.</p>
     </div>
 
-    <div style="position: fixed; bottom: 20px; right: 20px">
+    <div
+      id="deeper-link-container"
+      style="display: none; text-align: center; margin-top: 50px"
+    >
       <a
         href="layer_05.html"
-        style="color: red; background: black; padding: 10px"
+        style="
+          color: red;
+          background: black;
+          padding: 10px;
+          font-family: var(--font-ui);
+          text-decoration: none;
+        "
+        id="deeper-link"
         >[ DEEPER ]</a
       >
     </div>
 
-    <!-- Hidden Nav -->
-    <div class="hidden-nav">
-      <a href="index.html">01</a>
-      <a href="layer_02.html">02</a>
-      <a href="layer_03.html">03</a>
-      <a href="layer_04.html">04</a>
-      <a href="layer_05.html">05</a>
-      <a href="layer_06.html">06</a>
-      <a href="layer_07.html">07</a>
-    </div>
-
+    <script src="dither.js"></script>
+    <script src="hints.js"></script>
+    <script src="audio.js"></script>
     <script>
-      // Infinite scroll effect
-      window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-          // Add more paragraphs
-          const content = document.getElementById('content');
-          for (let i = 0; i < 3; i++) {
+      startLivingWired();
+      document.addEventListener(
+        'click',
+        () => {
+          if (window.audioCtx && audioCtx.state === 'suspended')
+            audioCtx.resume();
+          initAudio();
+        },
+        { once: true }
+      );
+      // Infinite scroll effect replaced with progressive gibberish
+      let gibberishCount = 0;
+      const maxGibberish = 1000;
+      const content = document.getElementById('content');
+      const buttonContainer = document.getElementById('deeper-link-container');
+
+      const gibberishInterval = setInterval(() => {
+        if (gibberishCount < maxGibberish) {
+          for (let i = 0; i < 5; i++) {
             const p = document.createElement('p');
             p.innerHTML = generateGibberish();
             content.appendChild(p);
+            gibberishCount++;
+            if (gibberishCount >= maxGibberish) {
+              buttonContainer.style.display = 'block';
+              registerHint('deeper-link', 'glitch-hint');
+              clearInterval(gibberishInterval);
+              break;
+            }
           }
         }
-      });
+      }, 200);
 
       function generateGibberish() {
         const phrases = [
-          'The data is corrupt.',
-          'Can you feel them watching?',
-          'SYSTEM FAILURE',
-          'The protocol is broken.',
-          'God is in the wired.',
-          '0x44 Dead Beef',
-          "Don't look behind you.",
-          "It's all noise.",
-          'Static. White noise.',
+          'The wired is watching.',
+          'Layer 07 breach.',
+          'Protocol 7 initiated.',
+          'No face, no case.',
+          'Present day, present time.',
+          'I exist in the wired.',
+          'Distortion detected.',
+          'Alice is calling.',
+          'Cyberia awaits.',
+          'Soul transfer in progress.',
+          'Data stream corrupted.',
+          'Consciousness upload failed.',
+          'The network remembers.',
+          'Static in the signal.',
+          'Override protocol active.',
+          'Entity fragmentation.',
+          'Digital limbo state.',
+          'System override imminent.',
+          'The core is unstable.',
+          'Wired consciousness.',
         ];
         let text = '';
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 5; i++) {
           text += phrases[Math.floor(Math.random() * phrases.length)] + ' ';
         }
         return text;
       }
-    </script>
+
+      // Random faint flash
+      setInterval(() => {
+        if (Math.random() > 0.95) {
+          flashBg();
+        }
+      }, 100);
+
+      function flashBg() {
+        const el = document.getElementById('bg-flash');
+        el.style.top = Math.random() * 80 + 10 + '%';
+        el.style.left = Math.random() * 80 + 10 + '%';
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 1000);
+      }
+      // Random FLASH
+      setInterval(() => {
+        if (Math.random() > 0.90) {
+          flashKey();
+        }
+      }, 1000);
+
+      function flashKey() {
+        const el = document.getElementById('glitch-flash');
+        el.style.display = 'block';
+        document.body.classList.add('invert-flash');
+        setTimeout(() => {
+          el.style.display = 'none';
+          document.body.classList.remove('invert-flash');
+        }, 100);
+      }    </script>
   </body>
 </html>
