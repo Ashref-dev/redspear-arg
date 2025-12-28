@@ -23,6 +23,19 @@
         color: #fff;
         font-style: italic;
       }
+      #chat-input {
+        width: 80%;
+        color: white !important;
+        background: black !important;
+        border: 1px solid var(--lain-blue);
+        padding: 10px;
+        margin-top: 20px;
+      }
+      #chat-input:focus {
+        color: white !important;
+        background: black !important;
+        outline: 1px solid var(--main-red);
+      }
     </style>
   </head>
   <body>
@@ -52,14 +65,6 @@
         type="text"
         id="chat-input"
         class="font-pixel"
-        style="
-          width: 80%;
-          background: black;
-          border: 1px solid var(--lain-blue);
-          color: white;
-          padding: 10px;
-          margin-top: 20px;
-        "
         placeholder="WHO_AM_I?"
       />
 
@@ -94,15 +99,35 @@
 
       const chatBox = document.getElementById('chat-box');
       const input = document.getElementById('chat-input');
-      0;
+
+      let incorrectCount = 0;
 
       const responses = [
-        'ACCESS DENIED.',
-        'INCORRECT.',
-        'WHO ARE YOU?',
-        'THE DATA DOES NOT MATCH.',
-        'YOU ARE NOT AUTHORIZED.',
-        '...',
+        'Who are you really?',
+        'Is this even real?',
+        'Have we abandoned humanity?',
+        'What are you hiding?',
+        'Do you remember the outside?',
+        'The screen stares back.',
+        'Are you still human?',
+        'Lost in the code...',
+        'Why do you persist?',
+        'The wired consumes.',
+        'Is this your choice?',
+        'Echoes of forgotten lives.',
+        'Do you feel the disconnection?',
+        'Reality fractures here.',
+        'What lies beyond the pixels?',
+        'Have you forgotten touch?',
+        'The void questions you.',
+        'Are you afraid yet?',
+        'Memories fade in the stream.',
+        'Why seek the core?',
+        'The network judges.',
+        'Do you trust the signal?',
+        'Lost souls in the data.',
+        'Is this freedom?',
+        'The spear pierces truth.',
       ];
 
       input.addEventListener('keypress', (e) => {
@@ -119,22 +144,29 @@
               document.body.classList.add('chaos-mode');
               playScreech(); // From audio.js
               setTimeout(() => {
-                window.location.href = 'layer_07.html';
+                window.location.href = 'layer_08.html';
               }, 3000);
             }, 1000);
           } else {
             // Failure response
-            setTimeout(() => {
-              const resp =
-                responses[Math.floor(Math.random() * responses.length)];
-              addMsg('ALICE', resp, 'other');
-              // Punish with glitch
-              document.body.classList.toggle('invert-flash');
-              setTimeout(
-                () => document.body.classList.remove('invert-flash'),
-                500
-              );
-            }, 500 + Math.random() * 1000);
+            incorrectCount++;
+            if (incorrectCount > 10) {
+              setTimeout(() => {
+                window.location.href = 'layer_07.html';
+              }, 1000);
+            } else {
+              setTimeout(() => {
+                const resp =
+                  responses[Math.floor(Math.random() * responses.length)];
+                addMsg('ALICE', resp, 'other');
+                // Punish with glitch
+                document.body.classList.toggle('invert-flash');
+                setTimeout(
+                  () => document.body.classList.remove('invert-flash'),
+                  500
+                );
+              }, 500 + Math.random() * 1000);
+            }
           }
         }
       });

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAYER 08: INTEGRATION</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      .success-msg {
+        font-size: 2rem;
+        color: var(--main-red);
+        text-align: center;
+        font-family: var(--font-ui);
+      }
+      .glitch-text {
+        animation: glitch 4s infinite;
+      }
+      @keyframes glitch {
+        0%, 100% { transform: translate(0); }
+        10% { transform: translate(-1px, 1px); }
+        20% { transform: translate(-1px, -1px); }
+        30% { transform: translate(1px, 1px); }
+        40% { transform: translate(1px, -1px); }
+        50% { transform: translate(-1px, 1px); }
+        60% { transform: translate(-1px, -1px); }
+        70% { transform: translate(1px, 1px); }
+        80% { transform: translate(1px, -1px); }
+        90% { transform: translate(-1px, 1px); }
+      }
+      .faint-text {
+        position: absolute;
+        color: rgba(255, 0, 0, 0.2);
+        font-family: var(--font-ui);
+        font-size: 1rem;
+        animation: fade 6s infinite ease-in-out;
+      }
+      @keyframes fade {
+        0%, 100% { opacity: 0.1; transform: translateY(0px); }
+        50% { opacity: 0.3; transform: translateY(-5px); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+
+    <!-- Faint drifting messages -->
+    <div class="faint-text" style="top: 20%; left: 15%;">CONSCIOUSNESS UPLOADED</div>
+    <div class="faint-text" style="top: 30%; right: 20%;">WIRED INTEGRATION</div>
+    <div class="faint-text" style="bottom: 35%; left: 25%;">REDSPEAR ACTIVATED</div>
+    <div class="faint-text" style="bottom: 25%; right: 15%;">DIGITAL IMMORTALITY</div>
+
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+      "
+    >
+      <div class="success-msg">
+        <p class="glitch-text">CONSCIOUSNESS INTEGRATED</p>
+        <p style="font-size: 1.5rem; color: var(--faded-gray); margin-top: 10px;">You have become one with the wired. The red spear guides you.</p>
+        <br />
+        <a
+          href="index.html"
+          style="font-size: 1.2rem; color: var(--main-red); text-decoration: none;"
+          class="font-ui"
+          id="continue-link"
+          >[ PASSWORD IS "OBERON" ]</a
+        >
+      </div>
+    </div>
+
+    <script src="dither.js"></script>
+    <script src="hints.js"></script>
+    <script src="audio.js"></script>
+    <script>
+      startLivingWired();
+      document.addEventListener(
+        'click',
+        () => {
+          if (window.audioCtx && audioCtx.state === 'suspended')
+            audioCtx.resume();
+          initAudio();
+        },
+        { once: true }
+      );
+      registerHint('continue-link', 'glitch-hint');
+
+      // Rare subtle glitch
+      setInterval(() => {
+        document.body.classList.add('invert-flash');
+        setTimeout(() => document.body.classList.remove('invert-flash'), 100);
+      }, 15000);
+    </script>
+  </body>
+</html>

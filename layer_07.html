@@ -2,21 +2,55 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>LAYER 07: TRUTH</title>
+    <title>LAYER 07: DISCONNECTED</title>
     <link rel="stylesheet" href="index.css" />
     <style>
-      .final-msg {
+      .fail-msg {
         font-size: 2rem;
-        color: white;
+        color: var(--main-red);
         text-align: center;
+        font-family: var(--font-ui);
+      }
+      .static-text {
+        position: absolute;
+        color: rgba(255, 0, 0, 0.3);
+        font-family: var(--font-ui);
+        font-size: 1rem;
+        animation: drift 8s infinite ease-in-out;
+      }
+      @keyframes drift {
+        0%, 100% { transform: translateX(0px) translateY(0px); opacity: 0.3; }
+        25% { transform: translateX(10px) translateY(-5px); opacity: 0.1; }
+        50% { transform: translateX(-5px) translateY(10px); opacity: 0.4; }
+        75% { transform: translateX(5px) translateY(-10px); opacity: 0.2; }
+      }
+      .glitch-text {
+        animation: glitch 3s infinite;
+      }
+      @keyframes glitch {
+        0%, 100% { transform: translate(0); }
+        10% { transform: translate(-2px, 2px); }
+        20% { transform: translate(-2px, -2px); }
+        30% { transform: translate(2px, 2px); }
+        40% { transform: translate(2px, -2px); }
+        50% { transform: translate(-2px, 2px); }
+        60% { transform: translate(-2px, -2px); }
+        70% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        90% { transform: translate(-2px, 2px); }
       }
     </style>
   </head>
   <body>
-    <div id="cursor-dot" class="cursor-dot"></div>
     <div class="vignette"></div>
     <div class="scanlines"></div>
-    <div class="noise" style="opacity: 0.4"></div>
+    <div class="noise"></div>
+
+    <!-- Drifting error messages -->
+    <div class="static-text" style="top: 15%; left: 10%;">CONNECTION LOST</div>
+    <div class="static-text" style="top: 25%; right: 15%;">SIGNAL FADED</div>
+    <div class="static-text" style="bottom: 30%; left: 20%;">WIRED REJECTS</div>
+    <div class="static-text" style="bottom: 20%; right: 10%;">RETURN TO VOID</div>
 
     <div
       style="
@@ -24,18 +58,19 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+        flex-direction: column;
       "
     >
-      <div class="final-msg font-crazy">
-        <p>CONSCIOUSNESS_FRIT</p>
-        <p style="font-size: 5rem; color: red">UPLOAD_FAILED</p>
-        <br /><br />
+      <div class="fail-msg">
+        <p class="glitch-text">CONNECTION LOST</p>
+        <p style="font-size: 1.5rem; color: var(--faded-gray); margin-top: 10px;">Too many failures. The wired has severed the link.</p>
+        <br />
         <a
           href="index.html"
-          style="font-size: 1rem; color: gray; text-decoration: none"
+          style="font-size: 1.2rem; color: var(--main-red); text-decoration: none;"
           class="font-ui"
-          id="reboot-link"
-          >[ RETRY UPLOAD ]</a
+          id="retry-link"
+          >[ RETRY ]</a
         >
       </div>
     </div>
@@ -54,7 +89,13 @@
         },
         { once: true }
       );
-      registerHint('reboot-link', 'glitch-hint');
+      registerHint('retry-link', 'glitch-hint');
+
+      // Subtle chaos
+      setInterval(() => {
+        document.body.classList.add('invert-flash');
+        setTimeout(() => document.body.classList.remove('invert-flash'), 150);
+      }, 8000);
     </script>
   </body>
 </html>
